@@ -23,8 +23,11 @@ class State<S, V>  {
 
     // f: V -> State(S -> [S, V])
     State bind(Closure f) {
-        def nextCall = { state, value -> f(value)(state) }
-        state { s -> nextCall(this.call(s)) }
+        state { state ->
+            def (nextState, value) = this.call(state)
+            def stateFromF = f(value)
+            stateFromF(nextState) // [S, V]
+        }
     }
 }
 
