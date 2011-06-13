@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.gryszko</groupId>
-    <artifactId>monadas-son-monas</artifactId>
+    <artifactId>groovy-monads</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
 
@@ -68,6 +68,9 @@
                 <version>${maven.surefire.version}</version>
                 <configuration>
                     <useFile>false</useFile>
+                    <includes>
+                        <include>**/*Spec.java</include>
+                    </includes>
                 </configuration>
             </plugin>
         </plugins>
