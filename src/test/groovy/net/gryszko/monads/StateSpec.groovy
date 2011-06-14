@@ -58,9 +58,7 @@ class StateSpec extends Specification {
     def "first monadic law: identity - m.bind { x -> unit(x) } ≡ m"() {
         setup:
         def monad = State.state { s -> [s + "z", s.length()] }
-        def f = { v ->
-            State.unit(v)
-        }
+        def f = { v -> State.unit(v) }
 
         when:
         def nextMonad = monad.bind(f)
@@ -74,9 +72,7 @@ class StateSpec extends Specification {
 
     def "second monadic law: unit - unit(x).flatMap(f) ≡ f(x)"() {
         setup:
-        def f = { v ->
-            State.state { s -> [s + [1], v + s.size()] }
-        }
+        def f = { v -> State.state { s -> [s + [1], v + s.size()] } }
 
         when:
         def nextMonad = State.unit(1).bind(f)
