@@ -3,9 +3,12 @@ package net.gryszko.monads
 import spock.lang.Specification
 import spock.lang.FailsWith
 
+class __ {
+}
+
 abstract class Result<T> {
     static Result<T> unit(T value) {
-        new Success(value)
+        // TBD
     }
 
     abstract Result<T> bind(Closure f)
@@ -17,15 +20,15 @@ class Success<T> extends Result<T> {
     private T value
 
     Success(T value) {
-        this.value = value
+        // TBD
     }
 
     Result<T> bind(Closure f) { // T -> Result<T>
-        f(value)
+        // TBD
     }
 
     Result<T> orElse(Result<T> o) {
-        this
+        // TBD
     }
 
     def methodMissing(String name, args) {
@@ -50,11 +53,11 @@ class Success<T> extends Result<T> {
 class Failure<T> extends Result<T> {
 
     Result<T> bind(Closure f) { // T -> Result<T>
-        new Failure<T>()
+        // TBD
     }
 
     Result<T> orElse(Result<T> o) {
-        o
+        // TBD
     }
 
     def methodMissing(String name, args) {
@@ -74,12 +77,12 @@ class ResultSpec extends Specification {
 
     def "unit method takes a value and transforms it into a monad"() {
         expect:
-        Result.unit(1) instanceof Success
+        Result.unit(1) instanceof __
     }
 
     def "unit in Java/Groovy is same as constructor"() {
         expect:
-        Result.unit(1) == new Success(1)
+        Result.unit(1) == __
     }
 
     def "in case of success all method calls are delegated to the underlying value"() {
@@ -87,10 +90,10 @@ class ResultSpec extends Specification {
         def result = new Success("hello!")
 
         expect:
-        result.length() == 6
+        result.length() == __
     }
 
-    @FailsWith(RuntimeException)
+    @FailsWith(__)
     def "in case of failure all method calls raise an exception"() {
         setup:
         def result = new Failure()
@@ -103,34 +106,34 @@ class ResultSpec extends Specification {
         setup:
         def mSome = new Success(1)
         def mNone = new Failure()
-        def f = { x -> Result.unit(x) }
+        def f = __
 
         expect:
-        mSome.bind(f) == mSome
-        mNone.bind(f) == mNone
+        mSome.bind(f) == __
+        mNone.bind(f) == __
     }
 
     def "second monadic law: unit - unit(x).flatMap(f) ≡ f(x)"() {
         setup:
-        def f = { x -> new Success([x + 1, x + 2]) }
+        def f = __
 
         expect:
-        Result.unit(1).bind(f) == f(1)
+        __ == f(1)
     }
 
     def "third monadic law: composition - m.flatMap(f).flatMap(g) ≡ m.flatMap{ x -> f(x).flatMap(g) }"() {
         setup:
         def m = Result.unit(1)
-        def f = { x -> new Success(2 * x) }
-        def g = { x -> new Failure() }
+        def f = __
+        def g = __
 
         expect:
-        m.bind(f).bind(g) == m.bind({ x -> f(x).bind(g) })
+        m.bind(f).bind(g) == __
     }
 
     def "bonus: first monadic zero law: identity - mzero.flatMap(f) ≡ mzero"() {
         setup:
-        def mzero = new Failure()
+        def mzero = __
         def f = { x -> Success(x) }
 
         expect:
@@ -140,19 +143,19 @@ class ResultSpec extends Specification {
     def "bonus: second monadic zero law: binding with monadic zero - m.flatMap({ x -> mzero }) ≡ mzero"() {
         setup:
         def m = new Success(1)
-        def mzero = new Failure()
+        def mzero = __
 
         expect:
-        m.bind({ x -> mzero }) == mzero
+        __ == mzero
     }
 
     def "bonus: third and fourth monadic zero law: plus - mzero.plus(m) ≡ m, m.plus(mzero) ≡ m"() {
         setup:
         def m = new Success(1)
-        def mzero = new Failure()
+        def mzero = __
 
         expect:
-        m.orElse(mzero) == m
-        mzero.orElse(m) == m
+        m.orElse(mzero) == __
+        mzero.orElse(m) == __
     }
 }
